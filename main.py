@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-import time, sys, requests, hashlib, pygubu, json, os
+import  time,sys,requests,hashlib,pygubu,json
+from selenium import  webdriver
 from bs4 import BeautifulSoup
 from splinter import Browser
-from selenium import webdriver
+
 import tkinter as tk
 
 #Supreme site data
@@ -54,10 +55,10 @@ class Application:
 			self.container.value_phone.set(self.config['phone'])
 			self.container.value_addr1.set(self.config['addr1'])
 			self.container.value_addr2.set(self.config['addr2'])
-			self.container.value_addr3.set(self.config['addr3'])
+			#self.container.value_addr3.set(self.config['addr3'])
 			self.container.value_zip.set(self.config['zip'])
 			self.container.value_city.set(self.config['city'])
-			self.container.value_country.set(self.config['country'])
+			#self.container.value_country.set(self.config['country'])
 			self.container.value_cardtype.set(self.config['cardtype'])
 			self.container.value_cardnumber.set(self.config['cardnumber'])
 			self.container.value_cardexpmonth.set(self.config['cardexpmonth'])
@@ -75,10 +76,10 @@ class Application:
 		self.config['phone'] = self.container.value_phone.get()
 		self.config['addr1'] = self.container.value_addr1.get()
 		self.config['addr2'] = self.container.value_addr2.get()
-		self.config['addr3'] = self.container.value_addr3.get()
+		#self.config['addr3'] = self.container.value_addr3.get()
 		self.config['zip'] = self.container.value_zip.get()
 		self.config['city'] = self.container.value_city.get()
-		self.config['country'] = self.container.value_country.get()
+		#self.config['country'] = self.container.value_country.get()
 		self.config['cardtype'] = self.container.value_cardtype.get()
 		self.config['cardnumber'] = self.container.value_cardnumber.get()
 		self.config['cardexpmonth'] = self.container.value_cardexpmonth.get()
@@ -99,7 +100,8 @@ class Application:
 		self.browser = Browser("chrome")
 		#self.browser.set_window_size(0, 0)
 		self.console_print("Waiting for drop")
-		#self.productlist.insert(tk.END, ['Work Pant','Black','34','pants'])
+		self.productlist.insert(tk.END, ['Boxer Briefs','Black','Small','accessories'])
+		self.productlist.insert(tk.END,['Tagless Tees','Black','Small','accessories'])
 		self.checkedout = False
 		while not self.checkedout:
 			self.product_search()
@@ -109,7 +111,9 @@ class Application:
 	def product_search(self):
 		items = 0
 		if (self.productlist.size() < 1):
+			print("productlist.size <1")
 			return
+		print(self.productlist.size())
 		for product in self.productlist.get(0, self.productlist.size()):
 			found_flag = False
 			self.console_print("Searching for "+product[0])
@@ -119,6 +123,7 @@ class Application:
 				for div in soup.find_all('div', 'turbolink_scroller'):
 					name_flag = False
 					for a in div.find_all('a', href=True, text=True):
+						print("a.text")
 						print(a.text)
 						if product[0] in a.text:
 							name_flag = True
@@ -148,10 +153,11 @@ class Application:
 		self.browser.fill('order[tel]', self.config['phone'])
 		self.browser.fill('order[billing_address]', self.config['addr1'])
 		self.browser.fill('order[billing_address_2]', self.config['addr2'])
-		self.browser.fill('order[billing_address_3]', self.config['addr3'])
+		#self.browser.fill('order[billing_address_3]', self.config['addr3'])
 		self.browser.fill('order[billing_zip]', self.config['zip'])
 		self.browser.fill('order[billing_city]', self.config['city'])
-		self.browser.select('order[billing_country]', self.config['country'])
+		#self.browser.select('order[billing_state]', self.config['state'])
+		#self.browser.select('order[billing_country]', self.config['country'])
 		self.browser.select('credit_card[type]', self.config['cardtype'])
 		self.browser.fill('credit_card[cnb]', self.config['cardnumber'])
 		self.browser.select('credit_card[month]', self.config['cardexpmonth'])
